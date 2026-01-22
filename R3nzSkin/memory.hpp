@@ -95,7 +95,7 @@ private:
 		},
 		{
 			{
-				"88 87 ? ? 00 00 48 89 45 87 0F B6 45 88 88 87 ? 13"
+				"88 86 ? ? 00 00 48 89 45 ? 0F B6 45 A8 88 86 ? 13"
 			}, false, true, false, 0, &offsets::AIBaseCommon::SkinId
 		},
 		{
@@ -110,7 +110,7 @@ private:
 		},
 		{
 			{
-				"4C 8B DC 53 56 57 48 83 EC ? 49"
+				"88 54 24 10 55 53 56 57 41 54 41 55 41 56 41"
 			}, true, false, false, 0, &offsets::functions::CharacterDataStack__Update
 		},
 		{
