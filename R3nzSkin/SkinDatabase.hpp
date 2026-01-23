@@ -101,6 +101,7 @@ public:
 		{ FNV("Sett"), 66, 66, { "Blue", "Gold", "Red" } },
 		{ FNV("Mordekaiser"), 54, 54, { "Sahn-Uzal", "Unconquered King", "Iron Revenant" } },
 		{ FNV("Kaisa"), 71, 71, { "Hall of Legends", "Risen Legend", "Immortalized Legend" } },
-		{ FNV("Morgana"), 80, 80, { "Mask1", "Mask2", "Mask3", "Mask4", "Mask5", "Mask6"}}
+		{ FNV("Morgana"), 80, 80, { "Mask1", "Mask2", "Mask3", "Mask4", "Mask5", "Mask6"}},
+		{ FNV("Viego"), 43, 43, { "Sword1", "Sword2", "Sword3", "Sword4", "Sword5", "Sword6", "Sword7"}}
 	};
 };
