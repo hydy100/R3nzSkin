@@ -8,6 +8,6 @@
 class Champion {
 	PAD(0x8)
 	AString champion_name;
-	PAD(0xC0)
+	PAD(0xB0)
 	RiotArray<Skin> skins;
 };
