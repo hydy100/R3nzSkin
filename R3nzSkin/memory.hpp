@@ -105,7 +105,7 @@ private:
 		},
 		{
 			{
-				"E8 ? ? ? ? 8B 95 ? ? 00 00 48 8B 0D ? ? ? ? E8 ? ? ? ? 48 8B D8"
+				"E8 ? ? ? ? 48 8D 8D ? ? 00 00 E8 ? ? ? ? 48 85 C0 74 ? 48 85 ED"
 			}, true, false, false, 0, &offsets::functions::CharacterDataStack__Push
 		},
 		{
