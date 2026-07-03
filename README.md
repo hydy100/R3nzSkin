@@ -6,6 +6,12 @@
 
 </div>
 
+> [!IMPORTANT]
+> Please do not use Issues to post advertisements, promotions, or repeated recommendations of similar paid products. Whether those products work or not is unrelated to this project, but abusive language, spam, or repeatedly posting through alternate accounts will not be accepted.
+
+
+
+
 # **Disclaimer**
 
 **This project is for learning and technical exchange purposes only. Commercial use or any illegal activity is strictly prohibited. Any direct or indirect consequences arising from the use of this project shall be borne solely by the user, and the author assumes no responsibility.**

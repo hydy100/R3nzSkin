@@ -300,7 +300,7 @@ void Hooks::init() noexcept
 			if (hash == FNV("JammerDevice") || hash == FNV("SightWard") || hash == FNV("YellowTrinket") || hash == FNV("VisionWard") || hash == FNV("BlueTrinket") || hash == FNV("TestCubeRender10Vision")) {
 				if (!player || owner == player) {
 					if (hash == FNV("TestCubeRender10Vision") && playerHash == FNV("Yone"))
-						changeModelForObject(minion, "Yone", owner->get_character_data_stack()->base_skin.skin);
+						changeSkinForObject(minion, owner->get_character_data_stack()->base_skin.skin);
 					else if (hash == FNV("TestCubeRender10Vision"))
 						changeSkinForObject(minion, 0);
 					else
