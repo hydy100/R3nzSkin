@@ -115,7 +115,7 @@ private:
 		},
 		{
 			{
-				"E8 ? ? ? ? 8B 57 34 45 33 C9"
+				"E8 ? ? ? ? 8B ? 34 45 33 C9"
 			}, true, false, false, 0, &offsets::functions::Riot__Renderer__MaterialRegistry__GetSingletonPtr
 		},
 		{
