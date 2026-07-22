@@ -20,6 +20,49 @@
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+// ─── Chroma-skip helpers ───────────────────────────────────────────
+
+// Returns true if a skin_info is a chroma variant (has "Chroma" in its name)
+static bool isChroma(const SkinDatabase::skin_info& skin) noexcept
+{
+    return skin.skin_name.find("Chroma") != std::string::npos;
+}
+
+// Find the next non-chroma skin index in `values`, wrapping around.
+// `currentIndex` is the 1-based combo index (0 = default).
+// Returns the new index (1-based), or 0 if no non-chroma skins exist.
+static std::int32_t findNextNonChroma(
+    const std::vector<SkinDatabase::skin_info>& values,
+    std::int32_t currentIndex,
+    bool forward) noexcept
+{
+    if (values.empty())
+        return 0;
+
+    const std::int32_t size = static_cast<std::int32_t>(values.size());
+
+    // Try up to `size` steps to avoid infinite loop if ALL are chromas
+    for (std::int32_t attempt = 0; attempt < size; ++attempt) {
+        if (forward) {
+            if (++currentIndex > size)
+                currentIndex = size;   // clamp at end (wraps in next attempt if needed)
+        } else {
+            if (--currentIndex < 1)
+                currentIndex = size;   // wrap from 1 → last
+        }
+
+        // Clamp to valid range
+        if (currentIndex < 1) currentIndex = 1;
+        if (currentIndex > size) currentIndex = size;
+
+        if (!isChroma(values[currentIndex - 1]))
+            return currentIndex;
+    }
+
+    // All skins are chromas — fall back to whatever we landed on
+    return currentIndex;
+}
+
 static inline void testFunc() noexcept
 {
 	// The codes you write here are executed when you press the F7 key in the game.
@@ -72,8 +115,12 @@ static LRESULT WINAPI wndProc(const HWND window, const UINT msg, const WPARAM wP
 		} else if (wParam == cheatManager.config->nextSkinKey.getKey() && cheatManager.config->quickSkinChange) {
 			if (const auto player{ cheatManager.memory->localPlayer }; player) {
 				const auto& values{ cheatManager.database->champions_skins[fnv::hash_runtime(player->get_character_data_stack()->base_skin.model.str)] };
-				if (++cheatManager.config->current_combo_skin_index > static_cast<std::int32_t>(values.size()))
-					cheatManager.config->current_combo_skin_index = static_cast<std::int32_t>(values.size());
+				if (cheatManager.config->skipChromas) {
+					cheatManager.config->current_combo_skin_index = findNextNonChroma(values, cheatManager.config->current_combo_skin_index, true);
+				} else {
+					if (++cheatManager.config->current_combo_skin_index > static_cast<std::int32_t>(values.size()))
+						cheatManager.config->current_combo_skin_index = static_cast<std::int32_t>(values.size());
+				}
 				if (cheatManager.config->current_combo_skin_index > 0)
 					player->change_skin(values[cheatManager.config->current_combo_skin_index - 1].model_name, values[cheatManager.config->current_combo_skin_index - 1].skin_id);
 				cheatManager.config->save();
@@ -81,10 +128,32 @@ static LRESULT WINAPI wndProc(const HWND window, const UINT msg, const WPARAM wP
 		} else if (wParam == cheatManager.config->previousSkinKey.getKey() && cheatManager.config->quickSkinChange) {
 			if (const auto player{ cheatManager.memory->localPlayer }; player) {
 				const auto& values{ cheatManager.database->champions_skins[fnv::hash_runtime(player->get_character_data_stack()->base_skin.model.str)] };
-				if (--cheatManager.config->current_combo_skin_index > 0)
+				if (cheatManager.config->skipChromas) {
+					cheatManager.config->current_combo_skin_index = findNextNonChroma(values, cheatManager.config->current_combo_skin_index, false);
+				} else {
+					if (--cheatManager.config->current_combo_skin_index > 0)
+						player->change_skin(values[cheatManager.config->current_combo_skin_index - 1].model_name, values[cheatManager.config->current_combo_skin_index - 1].skin_id);
+					else
+						cheatManager.config->current_combo_skin_index = 1;
+				}
+				if (cheatManager.config->current_combo_skin_index > 0)
 					player->change_skin(values[cheatManager.config->current_combo_skin_index - 1].model_name, values[cheatManager.config->current_combo_skin_index - 1].skin_id);
-				else
-					cheatManager.config->current_combo_skin_index = 1;
+				cheatManager.config->save();
+			}
+		} else if (wParam == cheatManager.config->nextSkinNoChromaKey.getKey() && cheatManager.config->quickSkinChange) {
+			if (const auto player{ cheatManager.memory->localPlayer }; player) {
+				const auto& values{ cheatManager.database->champions_skins[fnv::hash_runtime(player->get_character_data_stack()->base_skin.model.str)] };
+				cheatManager.config->current_combo_skin_index = findNextNonChroma(values, cheatManager.config->current_combo_skin_index, true);
+				if (cheatManager.config->current_combo_skin_index > 0)
+					player->change_skin(values[cheatManager.config->current_combo_skin_index - 1].model_name, values[cheatManager.config->current_combo_skin_index - 1].skin_id);
+				cheatManager.config->save();
+			}
+		} else if (wParam == cheatManager.config->previousSkinNoChromaKey.getKey() && cheatManager.config->quickSkinChange) {
+			if (const auto player{ cheatManager.memory->localPlayer }; player) {
+				const auto& values{ cheatManager.database->champions_skins[fnv::hash_runtime(player->get_character_data_stack()->base_skin.model.str)] };
+				cheatManager.config->current_combo_skin_index = findNextNonChroma(values, cheatManager.config->current_combo_skin_index, false);
+				if (cheatManager.config->current_combo_skin_index > 0)
+					player->change_skin(values[cheatManager.config->current_combo_skin_index - 1].model_name, values[cheatManager.config->current_combo_skin_index - 1].skin_id);
 				cheatManager.config->save();
 			}
 		} else if (wParam == VK_F7) {

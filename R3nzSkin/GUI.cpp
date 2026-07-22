@@ -225,6 +225,14 @@ void GUI::render() noexcept
 					ImGui::Separator();
 					ImGui::hotkey("Previous Skin Key", cheatManager.config->previousSkinKey);
 					ImGui::hotkey("Next Skin Key", cheatManager.config->nextSkinKey);
+					ImGui::Checkbox("Skip Chromas", &cheatManager.config->skipChromas);
+					ImGui::hoverInfo("When enabled, PageUp/PageDown will skip chroma variants (skins with 'Chroma' in the name).");
+					if (cheatManager.config->skipChromas) {
+						ImGui::Separator();
+						ImGui::Text("Dedicated chroma-skip keys (always skip chromas):");
+						ImGui::hotkey("Prev Non-Chroma Key", cheatManager.config->previousSkinNoChromaKey);
+						ImGui::hotkey("Next Non-Chroma Key", cheatManager.config->nextSkinNoChromaKey);
+					}
 					ImGui::Separator();
 				}
 
