@@ -120,7 +120,7 @@ private:
 		},
 		{
 			{
-				"E8 ? ? ? ? 0F 57 DB 4C 8B C0 F3 0F 5A DE"
+				"E8 ? ? ? ? 45 33 C0 48 8B D0 48 8B CB E8 ? ? ? ? E9"
 			}, true, false, false, 0, &offsets::functions::translateString_UNSAFE_DONOTUSE
 		},
 		{
