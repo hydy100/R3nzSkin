@@ -1,0 +1,74 @@
+{
+    "name": "solvercaptcha/solvecaptcha-php",
+    "type": "library",
+    "description": "PHP package for easy integration with solvecaptcha API.",
+    "homepage": "https://solvecaptcha.com/",
+    "keywords": [
+        "solvecaptcha",
+        "captcha",
+        "recaptcha",
+        "funcaptcha",
+        "keycaptcha",
+        "geetest",
+        "anticaptcha",
+        "recaptcha v2",
+        "recaptcha v3",
+        "bypass captcha",
+        "solve captcha",
+        "captcha solver",
+        "decaptcha",
+        "solvecaptcha.com",
+        "lemin",
+        "cloudflare turnstile",
+        "amazon waf",
+        "audio captcha",
+        "Tencent",
+        "MTCaptcha",
+        "Cutcaptcha",
+        "Friendly Captcha",
+        "atbCAPTCHA",
+        "DataDome"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "solvecaptcha",
+            "email": "info@solvecaptcha.com",
+            "homepage": "https://solvecaptcha.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/solvercaptcha/solvecaptcha-php/issues",
+        "source": "https://github.com/solvercaptcha/solvecaptcha-php",
+        "docs": "https://github.com/solvercaptcha/solvecaptcha-php/blob/main/README.md",
+        "email": "info@solvecaptcha.com"
+    },
+    "require": {
+        "php": ">=7.3",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SolveCaptcha\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SolveCaptcha\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/solvercaptcha/solvecaptcha-php"
+        }
+    ]
+}

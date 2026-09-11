@@ -1,0 +1,8 @@
+<phpunit bootstrap="tests/autoloader.php">
+    <testsuites>
+        <testsuite name="SolveCaptcha">
+            <directory>tests</directory>
+            <exclude>tests/autoloader.php</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>
