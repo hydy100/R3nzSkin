@@ -228,8 +228,10 @@ void GUI::render() noexcept
 					ImGui::Separator();
 				}
 
-				if (player)
-					ImGui::InputText("Change Nick", player->get_name());
+				if (player) {
+					std::string nickname{ player->get_name()->c_str() };
+					ImGui::InputText("Change Nick", &nickname);
+				}
 
 				if (ImGui::Button("No skins except local player")) {
 					for (auto& val : cheatManager.config->current_combo_enemy_skin_index | std::views::values)
