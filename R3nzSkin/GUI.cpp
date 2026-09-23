@@ -29,10 +29,18 @@ static void changeTurretSkin(const std::int32_t skinId, const std::int32_t team)
 		return;
 
 	const auto turrets{ cheatManager.memory->turretList };
-	const auto playerTeam{ cheatManager.memory->localPlayer->get_team() };
+	if (!turrets)
+		return;
+	const auto length{ turrets->length };
+	if (length <= 0 || length > 10000)
+		return;
+	const auto player{ cheatManager.memory->localPlayer };
+	if (!player)
+		return;
+	const auto playerTeam{ player->get_team() };
 
-	for (auto i{ 0u }; i < turrets->length; ++i) {
-		if (const auto turret{ turrets->list[i] }; turret->get_team() == team) {
+	for (auto i{ 0 }; i < length; ++i) {
+		if (const auto turret{ turrets->list[i] }; turret && turret->get_team() == team) {
 			if (playerTeam == team) {
 				turret->get_character_data_stack()->base_skin.skin = skinId * 2;
 				turret->get_character_data_stack()->update(true);
