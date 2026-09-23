@@ -85,7 +85,7 @@ private:
 		},
 		{
 			{
-				"48 8B 05 ? ? ? ? 48 8B ? 28 48 85 ? 74"
+				"48 8B 05 ? ? ? ? 48 8B 78 28 48 85 FF 74 ? 83 47 1C 02"
 			}, true, false, true, 0, &offsets::global::ManagerTemplate_AITurret_
 		},
 		{
