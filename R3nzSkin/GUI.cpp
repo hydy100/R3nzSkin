@@ -23,33 +23,40 @@ inline static void footer() noexcept
 	ImGui::textUnformattedCentered("Copyright (C) 2021-2024 R3nzTheCodeGOD");
 }
 
-static void changeTurretSkin(const std::int32_t skinId, const std::int32_t team) noexcept
+static std::int32_t changeTurretSkin(const std::int32_t skinId, const std::int32_t team) noexcept
 {
 	if (skinId == -1)
-		return;
+		return 0;
 
 	const auto turrets{ cheatManager.memory->turretList };
 	if (!turrets)
-		return;
+		return 0;
 	const auto length{ turrets->length };
 	if (length <= 0 || length > 10000)
-		return;
+		return 0;
 	const auto player{ cheatManager.memory->localPlayer };
 	if (!player)
-		return;
+		return 0;
 	const auto playerTeam{ player->get_team() };
 
+	std::int32_t done{ 0 };
 	for (auto i{ 0 }; i < length; ++i) {
-		if (const auto turret{ turrets->list[i] }; turret && turret->get_team() == team) {
-			if (playerTeam == team) {
-				turret->get_character_data_stack()->base_skin.skin = skinId * 2;
-				turret->get_character_data_stack()->update(true);
-			} else {
-				turret->get_character_data_stack()->base_skin.skin = skinId * 2 + 1;
-				turret->get_character_data_stack()->update(true);
+		__try {
+			if (const auto turret{ turrets->list[i] }; turret && turret->get_team() == team) {
+				if (playerTeam == team) {
+					turret->get_character_data_stack()->base_skin.skin = skinId * 2;
+					turret->get_character_data_stack()->update(true);
+				} else {
+					turret->get_character_data_stack()->base_skin.skin = skinId * 2 + 1;
+					turret->get_character_data_stack()->update(true);
+				}
+				++done;
 			}
+		} __except (EXCEPTION_EXECUTE_HANDLER) {
+			continue;
 		}
 	}
+	return done;
 }
 
 void GUI::render() noexcept
@@ -186,21 +193,37 @@ void GUI::render() noexcept
 			if (ImGui::BeginTabItem("Global Skins")) {
 				ImGui::Text("Global Skins Settings:");
 				if (ImGui::Combo("Minion Skins:", &cheatManager.config->current_combo_minion_index, vector_getter_default, static_cast<void*>(&cheatManager.database->minions_skins), cheatManager.database->minions_skins.size() + 1))
+				{
 					cheatManager.config->current_minion_skin_index = cheatManager.config->current_combo_minion_index - 1;
+					cheatManager.config->save();
+					cheatManager.logger->addLog("[OK] Minion skin saved (combo %d).\n", cheatManager.config->current_combo_minion_index);
+				}
 				ImGui::Separator();
 				if (ImGui::Combo("Order Turret Skins:", &cheatManager.config->current_combo_order_turret_index, vector_getter_default, static_cast<void*>(&cheatManager.database->turret_skins), cheatManager.database->turret_skins.size() + 1)) 
 				{
+					std::int32_t done{ 0 };
 					if (cheatManager.config->current_combo_order_turret_index >= 17)
-						changeTurretSkin(cheatManager.config->current_combo_order_turret_index + 1, 1);
+						done = changeTurretSkin(cheatManager.config->current_combo_order_turret_index + 1, 1);
 					else 
-						changeTurretSkin(cheatManager.config->current_combo_order_turret_index - 1, 1);
+						done = changeTurretSkin(cheatManager.config->current_combo_order_turret_index - 1, 1);
+					cheatManager.config->save();
+					if (done > 0)
+						cheatManager.logger->addLog("[OK] Order turret skin changed (%d turrets).\n", done);
+					else
+						cheatManager.logger->addLog("[..] Order turret apply found no turrets.\n");
 				}
 				if (ImGui::Combo("Chaos Turret Skins:", &cheatManager.config->current_combo_chaos_turret_index, vector_getter_default, static_cast<void*>(&cheatManager.database->turret_skins), cheatManager.database->turret_skins.size() + 1)) 
 				{
+					std::int32_t done{ 0 };
 					if (cheatManager.config->current_combo_chaos_turret_index >= 17)
-						changeTurretSkin(cheatManager.config->current_combo_chaos_turret_index + 1, 2);
+						done = changeTurretSkin(cheatManager.config->current_combo_chaos_turret_index + 1, 2);
 					else
-						changeTurretSkin(cheatManager.config->current_combo_chaos_turret_index - 1, 2);
+						done = changeTurretSkin(cheatManager.config->current_combo_chaos_turret_index - 1, 2);
+					cheatManager.config->save();
+					if (done > 0)
+						cheatManager.logger->addLog("[OK] Chaos turret skin changed (%d turrets).\n", done);
+					else
+						cheatManager.logger->addLog("[..] Chaos turret apply found no turrets.\n");
 				}
 				ImGui::Separator();
 				ImGui::Text("Jungle Mobs Skins Settings:");
@@ -208,8 +231,12 @@ void GUI::render() noexcept
 					std::snprintf(str_buffer, 256, "Current %s skin", name);
 					const auto [fst, snd]{ cheatManager.config->current_combo_jungle_mob_skin_index.insert({ name_hashes.front(), 0 }) };
 					if (ImGui::Combo(str_buffer, &fst->second, vector_getter_default, &skins, skins.size() + 1))
+					{
 						for (const auto& hash : name_hashes)
 							cheatManager.config->current_combo_jungle_mob_skin_index[hash] = fst->second;
+						cheatManager.config->save();
+						cheatManager.logger->addLog("[OK] %s skin saved.\n", name);
+					}
 				}
 				footer();
 				ImGui::EndTabItem();
