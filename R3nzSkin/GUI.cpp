@@ -191,9 +191,10 @@ void GUI::render() noexcept
 				}
 			}
 
-			if (ImGui::BeginTabItem("全局皮肤")) {
-				ImGui::Text("全局皮肤设置：");
-				if (ImGui::Combo("小兵皮肤：", &cheatManager.config->current_combo_minion_index, vector_getter_default, static_cast<void*>(&cheatManager.database->minions_skins), cheatManager.database->minions_skins.size() + 1))
+			if (ImGui::BeginTabItem("Global Skins")) {
+				ImGui::Text("Global Skins Settings:");
+				if (ImGui::Combo("Minion Skins:", &cheatManager.config->current_combo_minion_index, vector_getter_default, static_cast<void*>(&cheatManager.database->minions_skins), cheatManager.database->minions_skins.size() + 1))
+				{
 					cheatManager.config->current_minion_skin_index = cheatManager.config->current_combo_minion_index - 1;
 					cheatManager.config->save();
 					cheatManager.logger->addLog("[OK] Minion skin saved (combo %d).\n", cheatManager.config->current_combo_minion_index);
