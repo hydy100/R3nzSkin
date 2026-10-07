@@ -353,6 +353,8 @@ void Hooks::init() noexcept
 	const auto player{ cheatManager.memory->localPlayer };
 	const auto heroes{ cheatManager.memory->heroList };
 	const auto minions{ cheatManager.memory->minionList };
+	if (!player || !heroes || !minions || !saneCount(heroes->length) || !saneCount(minions->length))
+		return;
 	static const auto playerHash{ player ? fnv::hash_runtime(player->get_character_data_stack()->base_skin.model.str) : 0u };
 
 	static bool turretsApplied{ false };
@@ -379,7 +381,7 @@ void Hooks::init() noexcept
 		const auto my_team{ player ? player->get_team() : 1 };
 		for (auto i{ 0u }; i < heroes->length; ++i) {
 			const auto hero{ heroes->list[i] };
-			if (hero == player)
+			if (!hero || hero == player)
 				continue;
 
 			const auto champion_name_hash{ fnv::hash_runtime(hero->get_character_data_stack()->base_skin.model.str) };
@@ -400,7 +402,10 @@ void Hooks::init() noexcept
 	});
 
 	for (auto i{ 0u }; i < heroes->length; ++i) {
-		if (const auto hero{ heroes->list[i] }; !hero->get_character_data_stack()->stack.empty()) {
+		const auto hero{ heroes->list[i] };
+		if (!hero)
+			continue;
+		if (!hero->get_character_data_stack()->stack.empty()) {
 			// Viego transforms into another champion as 2nd form, our own skin's id may not match for every champion. (same problem exists in sylas) 
 			if (const auto championName{ fnv::hash_runtime(hero->get_character_data_stack()->base_skin.model.str) }; championName == FNV("Viego") || championName == FNV("Sylas"))
 				continue;
@@ -414,6 +419,8 @@ void Hooks::init() noexcept
 
 	for (auto i{ 0u }; i < minions->length; ++i) {
 		const auto minion{ minions->list[i] };
+		if (!minion)
+			continue;
 
 		if (minion->isLaneMinion() && cheatManager.config->current_minion_skin_index != -1) {
 			if (player && player->get_team() == 2)

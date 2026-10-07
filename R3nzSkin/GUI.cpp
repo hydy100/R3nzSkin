@@ -68,6 +68,8 @@ void GUI::render() noexcept
 
 	const auto player{ cheatManager.memory->localPlayer };
 	const auto heroes{ cheatManager.memory->heroList };
+	if (!heroes || !saneCount(heroes->length))
+		return;
 	static const auto my_team{ player ? player->get_team() : 1 };
 	static int gear{ player ? player->get_character_data_stack()->base_skin.gear : 0 };
 
