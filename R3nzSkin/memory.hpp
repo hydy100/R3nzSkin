@@ -60,6 +60,11 @@ private:
 	{
 		{
 			{
+				"80 3A 00 4C 8B C2 74 11 0F 1F 84 00 00 00 00 00 49 FF C0 41 80 38 00 75 F7 E9"
+			}, true, false, false, 0, &offsets::functions::AString__Assign
+		},
+		{
+			{
 				"48 8B 3D ? ? ? ? 48 85 FF 74 15 48 81 C7"
 			}, true, false, true, 0, &offsets::global::Player
 		},
@@ -80,7 +85,7 @@ private:
 		},
 		{
 			{
-				"48 8B 05 ? ? ? ? 48 8B ? 28 48 85 ? 74"
+				"48 8B 05 ? ? ? ? 48 8B 78 28 48 85 FF 74 ? 83 47 1C 02"
 			}, true, false, true, 0, &offsets::global::ManagerTemplate_AITurret_
 		},
 		{

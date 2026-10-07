@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -29,21 +29,28 @@ static void changeTurretSkin(const std::int32_t skinId, const std::int32_t team)
     if (skinId == -1)
         return;
 
-    const auto turrets{ cheatManager.memory->turretList };
-    const auto playerTeam{ cheatManager.memory->localPlayer->get_team() };
+	const auto turrets{ cheatManager.memory->turretList };
+	if (!turrets)
+		return;
+	const auto length{ turrets->length };
+	if (length <= 0 || length > 10000)
+		return;
+	const auto player{ cheatManager.memory->localPlayer };
+	if (!player)
+		return;
+	const auto playerTeam{ player->get_team() };
 
-    for (auto i{ 0u }; i < turrets->length; ++i) {
-        if (const auto turret{ turrets->list[i] }; turret->get_team() == team) {
-            if (playerTeam == team) {
-                turret->get_character_data_stack()->base_skin.skin = skinId * 2;
-                turret->get_character_data_stack()->update(true);
-            }
-            else {
-                turret->get_character_data_stack()->base_skin.skin = skinId * 2 + 1;
-                turret->get_character_data_stack()->update(true);
-            }
-        }
-    }
+	for (auto i{ 0 }; i < length; ++i) {
+		if (const auto turret{ turrets->list[i] }; turret && turret->get_team() == team) {
+			if (playerTeam == team) {
+				turret->get_character_data_stack()->base_skin.skin = skinId * 2;
+				turret->get_character_data_stack()->update(true);
+			} else {
+				turret->get_character_data_stack()->base_skin.skin = skinId * 2 + 1;
+				turret->get_character_data_stack()->update(true);
+			}
+		}
+	}
 }
 
 void GUI::render() noexcept
@@ -232,9 +239,10 @@ void GUI::render() noexcept
                 if (player)
                     ImGui::InputText("更改昵称", player->get_name());
 
-                if (ImGui::Button("除本地玩家外无皮肤")) {
-                    for (auto& val : cheatManager.config->current_combo_enemy_skin_index | std::views::values)
-                        val = 1;
+				if (player) {
+					std::string nickname{ player->get_name()->c_str() };
+					ImGui::InputText("Change Nick", &nickname);
+				}
 
                     for (auto& val : cheatManager.config->current_combo_ally_skin_index | std::views::values)
                         val = 1;

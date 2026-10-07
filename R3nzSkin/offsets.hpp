@@ -39,6 +39,7 @@ namespace offsets {
 	};
 
 	namespace functions {
+		inline std::uint64_t AString__Assign{ 0 };
 		inline std::uint64_t Riot__Renderer__MaterialRegistry__GetSingletonPtr{ 0 };
 		inline std::uint64_t translateString_UNSAFE_DONOTUSE{ 0 };
 		inline std::uint64_t CharacterDataStack__Push{ 0 };
