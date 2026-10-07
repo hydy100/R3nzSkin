@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <string>
 #include <system_error>
@@ -45,6 +46,9 @@ void Config::save() noexcept
 	config_json["current_combo_ward_index"] = this->current_combo_ward_index;
 	config_json["current_ward_skin_index"] = this->current_ward_skin_index;
 	config_json["current_minion_skin_index"] = this->current_minion_skin_index;
+	config_json["current_combo_minion_index"] = this->current_combo_minion_index;
+	config_json["current_combo_order_turret_index"] = this->current_combo_order_turret_index;
+	config_json["current_combo_chaos_turret_index"] = this->current_combo_chaos_turret_index;
 
 	for (const auto& [fst, snd] : this->current_combo_ally_skin_index)
 		config_json["current_combo_ally_skin_index"][std::to_string(fst)] = snd;
@@ -86,6 +90,33 @@ void Config::load() noexcept
 	this->current_combo_ward_index = config_json.value("current_combo_ward_index", 0);
 	this->current_ward_skin_index = config_json.value("current_ward_skin_index", -1);
 	this->current_minion_skin_index = config_json.value("current_minion_skin_index", -1);
+	this->current_combo_minion_index = config_json.value("current_combo_minion_index", 0);
+	this->current_combo_order_turret_index = config_json.value("current_combo_order_turret_index", 0);
+	this->current_combo_chaos_turret_index = config_json.value("current_combo_chaos_turret_index", 0);
+
+	if (cheatManager.database) {
+		if (!cheatManager.database->minions_skins.empty()) {
+			const auto maxMinion{ static_cast<std::int32_t>(cheatManager.database->minions_skins.size()) };
+			const auto oldMinion{ this->current_combo_minion_index };
+			this->current_combo_minion_index = std::clamp(this->current_combo_minion_index, 0, maxMinion);
+			if (this->current_combo_minion_index != oldMinion)
+				cheatManager.logger->addLog("[!!] Clamped minion combo %d->%d (skin list changed).\n", oldMinion, this->current_combo_minion_index);
+			this->current_minion_skin_index = this->current_combo_minion_index - 1;
+		}
+		if (!cheatManager.database->turret_skins.empty()) {
+			const auto maxTurret{ static_cast<std::int32_t>(cheatManager.database->turret_skins.size()) };
+			const auto oldOrder{ this->current_combo_order_turret_index };
+			const auto oldChaos{ this->current_combo_chaos_turret_index };
+			this->current_combo_order_turret_index = std::clamp(this->current_combo_order_turret_index, 0, maxTurret);
+			this->current_combo_chaos_turret_index = std::clamp(this->current_combo_chaos_turret_index, 0, maxTurret);
+			if (this->current_combo_order_turret_index != oldOrder)
+				cheatManager.logger->addLog("[!!] Clamped order-turret %d->%d (skin list changed).\n", oldOrder, this->current_combo_order_turret_index);
+			if (this->current_combo_chaos_turret_index != oldChaos)
+				cheatManager.logger->addLog("[!!] Clamped chaos-turret %d->%d (skin list changed).\n", oldChaos, this->current_combo_chaos_turret_index);
+		}
+	}
+	if (this->current_combo_minion_index != 0 || this->current_combo_order_turret_index != 0 || this->current_combo_chaos_turret_index != 0)
+		cheatManager.logger->addLog("[OK] Loaded Global combos (minion %d, order %d, chaos %d).\n", this->current_combo_minion_index, this->current_combo_order_turret_index, this->current_combo_chaos_turret_index);
 
 	const auto ally_skins{ config_json.find("current_combo_ally_skin_index") };
 	if (ally_skins != config_json.end())

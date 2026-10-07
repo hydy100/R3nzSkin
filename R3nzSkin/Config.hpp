@@ -36,7 +36,7 @@ public:
 	std::int32_t current_combo_ward_index{ 0 };
 	std::int32_t current_ward_skin_index{ -1 };
 
-	// turrets, don't save them in config
+	// turrets saved too, guarded apply, so stale offsets won't crash
 	std::int32_t current_combo_order_turret_index{ 0 };
 	std::int32_t current_combo_chaos_turret_index{ 0 };
 
