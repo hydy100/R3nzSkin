@@ -11,3 +11,5 @@ class ManagerTemplate {
 	std::int32_t length;
 	std::int32_t capacity;
 };
+
+[[nodiscard]] inline bool saneCount(const std::int32_t n) noexcept { return n > 0 && n <= 10000; }
