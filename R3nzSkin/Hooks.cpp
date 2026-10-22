@@ -244,7 +244,7 @@ namespace d3d_vtable {
 	static void render() noexcept
 	{
 		const auto client{ cheatManager.memory->client };
-		if (client && client->game_state == GGameState_s::Running) {
+		if (client && client->get_game_state() == GGameState_s::Running) {
 			cheatManager.hooks->init();
 			if (cheatManager.gui->is_open) {
 				::ImGui_ImplDX11_NewFrame();

@@ -1,9 +1,9 @@
 #include <cstdint>
+#include <intrin.h>
 #include <string>
 
 #include "AIBaseCommon.hpp"
 
-#include "../encryption.hpp"
 #include "../fnv_hash.hpp"
 #include "../offsets.hpp"
 
@@ -36,7 +36,9 @@ bool AIBaseCommon::checkSpecialSkins(const char* model, const std::int32_t skin)
 void AIBaseCommon::change_skin(const char* model, const std::int32_t skin) noexcept
 {
 	const auto stack{ this->get_character_data_stack() };
-	reinterpret_cast<xor_value<std::int32_t>*>(std::uintptr_t(this) + offsets::AIBaseCommon::SkinId)->encrypt(skin);
+	*reinterpret_cast<std::uint32_t*>(std::uintptr_t(this) + offsets::AIBaseCommon::SkinId) =
+		_rotr(_rotr(static_cast<std::uint32_t>(skin), offsets::encoding::SkinIdRotate1) ^
+			offsets::encoding::SkinIdXor, offsets::encoding::SkinIdRotate2);
 	stack->base_skin.skin = skin;
 
 	if (!this->checkSpecialSkins(model, skin))
