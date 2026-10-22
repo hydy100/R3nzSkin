@@ -44,7 +44,7 @@ __declspec(safebuffers) static void WINAPI DllAttach([[maybe_unused]] LPVOID lp)
 		
 		if (!cheatManager.memory->client)
 			cheatManager.memory->Search(true);
-		else if (cheatManager.memory->client->game_state == GGameState_s::Running)
+		else if (cheatManager.memory->client->get_game_state() == GGameState_s::Running)
 			break;
 	}
 	cheatManager.logger->addLog("GameClient found!\n");

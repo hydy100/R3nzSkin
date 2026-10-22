@@ -14,8 +14,8 @@ namespace offsets {
 			};
 		};
 		enum {
-			Team = 0x239,
-			Name = 0x68
+			Team = 0x158,
+			Name = 0x40
 		};
 	};
 
@@ -34,6 +34,14 @@ namespace offsets {
 		inline std::uint64_t SkinId{ 0 };
 	};
 
+	namespace encoding {
+		inline std::uint32_t GameClientAdd{ 0 };
+		inline std::uint32_t GameClientXor{ 0 };
+		inline std::uint32_t SkinIdXor{ 0 };
+		inline std::uint8_t GameClientRotate{ 0 };
+		inline std::uint8_t SkinIdRotate1{ 0 };
+		inline std::uint8_t SkinIdRotate2{ 0 };
+	};
 	namespace MaterialRegistry {
 		inline std::uint64_t SwapChain{ 0 };
 	};
