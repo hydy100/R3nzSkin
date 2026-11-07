@@ -18,7 +18,7 @@ bool AIBaseCommon::checkSpecialSkins(const char* model, const std::int32_t skin)
 		stack->base_skin.gear = static_cast<std::int8_t>(0);
 	} else if (champ_name == FNV("Renekton") && (skin >= 26 && skin <= 32)) {
 		stack->base_skin.gear = static_cast<std::int8_t>(0);
-	} else if (champ_name == FNV("MissFortune") && skin == 16) {
+	} else if (champ_name == FNV("MissFortune") && (skin == 16 || (skin >= 69 && skin <= 75))) {
 		stack->base_skin.gear = static_cast<std::int8_t>(0);
 	} else if (champ_name == FNV("Lux") || champ_name == FNV("Sona")) {
 		if ((skin == 7 && champ_name == FNV("Lux")) || (skin == 6 && champ_name == FNV("Sona"))) {
