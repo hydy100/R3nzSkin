@@ -37,9 +37,8 @@ void AIBaseCommon::change_skin(const char* model, const std::int32_t skin) noexc
 {
 	const auto stack{ this->get_character_data_stack() };
 	*reinterpret_cast<std::uint32_t*>(std::uintptr_t(this) + offsets::AIBaseCommon::SkinId) =
-		_rotr(_rotr(_rotr(static_cast<std::uint32_t>(skin), offsets::encoding::SkinIdRotate1) ^
-			offsets::encoding::SkinIdXor, offsets::encoding::SkinIdRotate2) + offsets::encoding::SkinIdAdd,
-			offsets::encoding::SkinIdRotate3);
+		_rotr(static_cast<std::uint32_t>(skin) ^ offsets::encoding::SkinIdXor,
+			offsets::encoding::SkinIdRotate1) + offsets::encoding::SkinIdAdd;
 	stack->base_skin.skin = skin;
 
 	if (!this->checkSpecialSkins(model, skin))

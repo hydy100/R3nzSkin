@@ -127,22 +127,23 @@ void Memory::Search(bool gameClient)
 						// cheatManager.logger->addLog("Not found: %s\n", pattern.c_str());
 						continue;
 					}
+					address += sig.additional; // Matched instruction starts inside the shared signature.
 					if (sig.offset == &offsets::global::GameClient) {
-						if (address[12] >= 32)
+						if (address[10] != 0x81 || address[11] != 0xF1 || address[24] >= 32 || address[33] >= 32)
 							continue;
-						offsets::encoding::GameClientRotate = address[12];
-						std::memcpy(&offsets::encoding::GameClientXor, address + 15, sizeof(std::uint32_t));
-						std::memcpy(&offsets::encoding::GameClientAdd, address + 21, sizeof(std::uint32_t));
+						offsets::encoding::GameClientRotate = address[24];
+						std::memcpy(&offsets::encoding::GameClientXor, address + 12, sizeof(std::uint32_t));
+						std::memcpy(&offsets::encoding::GameClientAdd, address + 18, sizeof(std::uint32_t));
+						std::memcpy(&offsets::encoding::GameClientXor2, address + 27, sizeof(std::uint32_t));
+						offsets::encoding::GameClientRotate2 = address[33];
 					} else if (sig.offset == &offsets::AIBaseCommon::SkinId) {
 						std::uint32_t field_offset{};
-						std::memcpy(&field_offset, address + 44, sizeof(field_offset));
-						if (!field_offset || address[2] >= 32 || address[41] >= 32)
+						std::memcpy(&field_offset, address + 22, sizeof(field_offset));
+						if (!field_offset || address[-21] != 0x81 || address[-20] != 0xF6 || address[-5] >= 32)
 							continue;
-						offsets::encoding::SkinIdRotate1 = address[2];
-						std::memcpy(&offsets::encoding::SkinIdXor, address + 9, sizeof(std::uint32_t));
-						offsets::encoding::SkinIdRotate2 = 1;
-						std::memcpy(&offsets::encoding::SkinIdAdd, address + 35, sizeof(std::uint32_t));
-						offsets::encoding::SkinIdRotate3 = address[41];
+						offsets::encoding::SkinIdRotate1 = address[-5];
+						std::memcpy(&offsets::encoding::SkinIdXor, address - 19, sizeof(std::uint32_t));
+						std::memcpy(&offsets::encoding::SkinIdAdd, address + 16, sizeof(std::uint32_t));
 						*sig.offset = field_offset;
 						break;
 					}
@@ -156,8 +157,6 @@ void Memory::Search(bool gameClient)
 
 					if (sig.sub_base)
 						address -= this->base;
-
-					address += sig.additional;
 
 					*sig.offset = reinterpret_cast<std::uint32_t>(address);
 					// cheatManager.logger->addLog("Found: %s\n\tAddress: 0x%X\n", pattern.c_str(), *sig.offset);

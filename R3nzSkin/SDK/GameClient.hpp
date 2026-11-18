@@ -12,7 +12,8 @@ class GameClient {
 public:
 	[[nodiscard]] GGameState_s get_game_state() const noexcept
 	{
-		return static_cast<GGameState_s>((_rotr(encoded_game_state, offsets::encoding::GameClientRotate) ^
-			offsets::encoding::GameClientXor) + offsets::encoding::GameClientAdd);
+		return static_cast<GGameState_s>(_rotr(_rotr((encoded_game_state ^ offsets::encoding::GameClientXor) +
+			offsets::encoding::GameClientAdd, offsets::encoding::GameClientRotate) ^
+			offsets::encoding::GameClientXor2, offsets::encoding::GameClientRotate2));
 	}
 };

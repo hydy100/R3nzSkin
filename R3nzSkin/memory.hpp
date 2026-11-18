@@ -51,8 +51,8 @@ private:
 	{
 		{
 			{
-				"48 8B 05 ? ? ? ? 8B 48 10 C1 C9 ? 81 F1 ? ? ? ? 81 C1 ? ? ? ? 83 F9 02 77 04 32 C9 EB 02 B1 01"
-			}, true, false, true, 0, &offsets::global::GameClient
+				"83 F8 01 75 ? 48 8B 05 ? ? ? ? 8B 48 10"
+			}, true, false, true, 5, &offsets::global::GameClient
 		}
 	};
 
@@ -70,7 +70,7 @@ private:
 		},
 		{
 			{
-				"48 8B 05 ? ? ? ? 48 8B ? 08 8B 40 ? ? 8D ? ? ? 3B ? 74"
+				"48 8B 05 ? ? ? ? 48 8B 78 08 8B 40 10 48 8D 2C C7 48 3B FD 74 ? 48 8B 37 49 3B F5"
 			}, true, false, true, 0, &offsets::global::ManagerTemplate_AIHero_
 		},
 		{
@@ -100,7 +100,7 @@ private:
 		},
 		{
 			{
-				"C1 CE ? 48 8D 55 ? 81 F6 ? ? ? ? 4C 89 6D ? D1 CE 48 8D 8F ? ? ? ? C7 45 ? 00 00 80 3F 8D 86 ? ? ? ? C1 C8 ? 89 87 ? ? ? ?"
+				"48 8D 8F ? ? ? ? C7 45 ? 00 00 80 3F 8D 86 ? ? ? ?"
 			}, false, false, false, 0, &offsets::AIBaseCommon::SkinId
 		},
 		{
@@ -110,8 +110,8 @@ private:
 		},
 		{
 			{
-				"E8 ? ? ? ? 48 8D 8D ? ? 00 00 E8 ? ? ? ? 48 85 C0 74 ? 48 85 ED"
-			}, true, false, false, 0, &offsets::functions::CharacterDataStack__Push
+				"88 44 24 28 0F B6 84 24 00 01 00 00 88 44 24 20 E8 ? ? ? ?"
+			}, true, false, false, 16, &offsets::functions::CharacterDataStack__Push
 		},
 		{
 			{
